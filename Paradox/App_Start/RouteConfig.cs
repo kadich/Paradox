@@ -16,7 +16,7 @@ namespace Paradox
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Check", action = "StartPage", id = UrlParameter.Optional }
             );
         }
     }
