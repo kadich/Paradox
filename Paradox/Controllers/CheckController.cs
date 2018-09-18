@@ -24,7 +24,8 @@ namespace Paradox.Controllers
 
             bool[] doors = new bool[3]; //создание массива размером [3], представляющий собой 3 "двери"
 
-            for (int i = 0; i < 100; i++) //цикл для многократного повторения стратегий
+            const int repetitions = 1000;
+            for (int i = 0; i < repetitions; i++) //цикл для многократного повторения стратегий
             {
                 //очистка массива перед очередным проходом цикла
                 for (int d = 0; d < doors.Length; d++)
@@ -37,37 +38,15 @@ namespace Paradox.Controllers
                 Random rnd1 = new Random((int)DateTime.Now.Ticks);
                 doors[rnd1.Next(0, 3)] = true;
 
-                Thread.Sleep(2); //приостановка потока для более случайного Random
+                Thread.Sleep(1); //приостановка потока для более случайного Random
 
                 //создание экземпляра класса Random и симуляции случайного выбора номера "двери" участником
                 Random rnd2 = new Random((int)DateTime.Now.Ticks);
                 int choice1 = rnd2.Next(0, 3);
 
-                int shown = 0; //переменная для записи номер показанной "двери"
-                //симуляция открытия "двери", за которой стоит "коза"
-                for (int k = 0; k < 3; k++)
-                {
-                    //условия: за "дверью" не должна быть "машина" и "дверь" не должна быть выбрана участником
-                    if (!doors[k] & k != choice1)
-                    {
-                        shown = k;
-                        break;
-                    }
-                }
-
-                //симуляция смены выбора "двери" участником
-                int choice2 = 0;
-                for (int j = 0; j < 3; j++)
-                {
-                    //условия: "дверь" не должна быть выбрана и "дверь" не должна быть открыта
-                    if (j != choice1 & j != shown)
-                    {
-                        choice2 = j;
-                        break;
-                    }
-                }
-
-                //подсчет количества верных выборов
+                // вторая стратегия автоматически становится выигрышной, в случае неудачи первой стартегии,
+                // а значит логика подсчета результатов будет выглядить следующим образом:
+                
                 if (doors[choice1])
                 {
                     result[0].WinRate1++;
@@ -77,6 +56,9 @@ namespace Paradox.Controllers
                     result[0].WinRate2++;
                 }
             }
+
+            result[0].WinRate1 = result[0].WinRate1 / (repetitions / 100);
+            result[0].WinRate2 = result[0].WinRate2 / (repetitions / 100);
 
             return View("ResultPage", result);
         }
